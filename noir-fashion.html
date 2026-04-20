@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NŌIR — Luxury Fashion House</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,700&family=Unbounded:wght@200;400;700;900&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --black:#080608;
+  --deep:#0f0a0f;
+  --surface:#150f15;
+  --white:#fdf8f0;
+  --orange:#ff6b1a;
+  --hot-pink:#ff1a6b;
+  --yellow:#ffd60a;
+  --coral:#ff4d6d;
+  --lime:#c9f31d;
+  --muted:rgba(253,248,240,0.45);
+  --border:rgba(253,248,240,0.08);
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --display:'Unbounded',sans-serif;
+  --sans:'DM Sans',sans-serif;
+  --ease-expo:cubic-bezier(0.16,1,0.3,1);
+  --ease-in-out:cubic-bezier(0.76,0,0.24,1);
+}
+html{scroll-behavior:auto;overflow-x:hidden;}
+body{
+  background:var(--black);
+  color:var(--white);
+  font-family:var(--sans);
+  font-weight:300;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cur{
+  position:fixed;z-index:9999;
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+  mix-blend-mode:difference;
+  transition:width .25s var(--ease-expo),height .25s var(--ease-expo);
+}
+.cur-dot{
+  width:12px;height:12px;
+  background:var(--white);
+  border-radius:50%;
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  transition:width .3s,height .3s;
+}
+.cur-ring{
+  width:44px;height:44px;
+  border:1.5px solid rgba(255,255,255,0.4);
+  border-radius:50%;
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  transition:width .4s var(--ease-expo),height .4s var(--ease-expo),opacity .3s;
+}
+body.hovering .cur-dot{width:6px;height:6px;}
+body.hovering .cur-ring{width:70px;height:70px;border-color:var(--orange);}
+body.hovering-img .cur-dot{width:4px;height:4px;background:var(--hot-pink);}
+body.hovering-img .cur-ring{width:90px;height:90px;border-color:var(--hot-pink);border-width:1px;}
+
+/* Cursor label */
+.cur-label{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-family:var(--display);
+  font-size:8px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--white);
+  opacity:0;
+  white-space:nowrap;
+  transition:opacity .3s;
+}
+body.hovering-img .cur-label{opacity:1;}
+
+/* ── LOADER ── */
+#loader{
+  position:fixed;inset:0;z-index:2000;
+  background:var(--black);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:32px;
+  transition:clip-path .9s var(--ease-in-out),opacity .3s;
+  clip-path:inset(0 0 0 0);
+}
+#loader.out{
+  clip-path:inset(0 0 100% 0);
+  opacity:0;
+  pointer-events:none;
+}
+.ld-logo{
+  font-family:var(--display);
+  font-size:clamp(40px,8vw,80px);
+  font-weight:900;
+  letter-spacing:.25em;
+  color:var(--white);
+  overflow:hidden;
+}
+.ld-logo span{
+  display:inline-block;
+  opacity:0;
+  transform:translateY(100%);
+  animation:ldChar .6s var(--ease-expo) forwards;
+}
+.ld-logo span:nth-child(1){animation-delay:.1s;}
+.ld-logo span:nth-child(2){animation-delay:.18s;}
+.ld-logo span:nth-child(3){animation-delay:.26s;}
+.ld-logo span:nth-child(4){animation-delay:.34s;}
+@keyframes ldChar{to{opacity:1;transform:translateY(0);}}
+.ld-bar{
+  width:240px;height:1px;
+  background:rgba(253,248,240,.08);
+  position:relative;overflow:hidden;
+}
+.ld-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--orange),var(--hot-pink),var(--yellow));
+  width:0%;
+  transition:width .05s linear;
+}
+.ld-pct{
+  font-family:var(--display);
+  font-size:11px;font-weight:400;
+  letter-spacing:.2em;
+  color:rgba(253,248,240,.25);
+  margin-top:-8px;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  padding:28px 56px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:all .5s;
+}
+nav::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(8,6,8,.9),transparent);
+  opacity:0;transition:opacity .5s;pointer-events:none;
+}
+nav.solid::before{opacity:1;}
+nav.solid{backdrop-filter:blur(20px);}
+.nav-logo{
+  font-family:var(--display);
+  font-size:18px;font-weight:900;
+  letter-spacing:.3em;text-decoration:none;
+  color:var(--white);position:relative;z-index:1;
+}
+.nav-logo .macron{color:var(--orange);}
+.nav-links{display:flex;gap:36px;list-style:none;position:relative;z-index:1;}
+.nav-links a{
+  color:var(--muted);text-decoration:none;
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:400;transition:color .3s;
+}
+.nav-links a:hover{color:var(--white);}
+.nav-cta{
+  position:relative;z-index:1;
+  font-family:var(--display);
+  font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;
+  background:linear-gradient(135deg,var(--orange),var(--hot-pink));
+  color:var(--white);
+  border:none;padding:12px 28px;border-radius:2px;
+  cursor:none;transition:opacity .3s,transform .2s;
+}
+.nav-cta:hover{opacity:.85;transform:translateY(-1px);}
+
+/* ── HERO ── */
+#hero{
+  height:100vh;position:relative;overflow:hidden;
+  display:flex;align-items:flex-end;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:linear-gradient(160deg,#1a0808 0%,#0f0010 40%,#080618 100%);
+}
+.hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 75% 40%,rgba(255,107,26,.12) 0%,transparent 55%),
+    radial-gradient(ellipse at 20% 80%,rgba(255,26,107,.08) 0%,transparent 50%),
+    radial-gradient(ellipse at 50% 10%,rgba(255,214,10,.06) 0%,transparent 45%);
+}
+
+/* Parallax model images in hero */
+.hero-models{
+  position:absolute;inset:0;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:0;
+  overflow:hidden;
+}
+.hm-col{
+  position:relative;overflow:hidden;
+  will-change:transform;
+}
+.hm-col:nth-child(1){transform:translateY(-40px);}
+.hm-col:nth-child(2){transform:translateY(0px);}
+.hm-col:nth-child(3){transform:translateY(-20px);}
+.hm-img{
+  width:100%;height:120%;
+  object-fit:cover;
+  object-position:center top;
+  filter:contrast(1.05) saturate(1.1);
+  transition:transform .8s var(--ease-expo);
+  display:block;
+}
+/* Color overlays per column */
+.hm-col:nth-child(1)::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(8,6,8,.95) 0%,rgba(8,6,8,.3) 100%);
+  z-index:1;
+}
+.hm-col:nth-child(2)::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(255,107,26,.15) 0%,rgba(8,6,8,.4) 100%);
+  z-index:1;
+}
+.hm-col:nth-child(3)::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to left,rgba(8,6,8,.95) 0%,rgba(8,6,8,.2) 100%);
+  z-index:1;
+}
+.hero-bottom-fade{
+  position:absolute;bottom:0;left:0;right:0;height:50%;
+  background:linear-gradient(to top,var(--black) 0%,transparent 100%);
+  z-index:2;
+}
+
+/* Hero content */
+.hero-content{
+  position:relative;z-index:3;
+  padding:0 56px 80px;
+  width:100%;
+  display:flex;flex-direction:column;
+  gap:0;
+}
+.hero-season{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:10px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--orange);margin-bottom:24px;
+  opacity:0;animation:fadeUp .8s 1.8s var(--ease-expo) forwards;
+}
+.hero-season::before{
+  content:'';width:28px;height:1px;background:var(--orange);
+}
+.hero-title{
+  font-family:var(--display);
+  font-size:clamp(52px,11vw,150px);
+  font-weight:900;
+  line-height:.88;
+  letter-spacing:-.03em;
+  overflow:hidden;
+}
+.hero-title-line{
+  display:block;overflow:hidden;
+}
+.hero-title-word{
+  display:inline-block;
+  transform:translateY(110%);
+  animation:slideUp .9s var(--ease-expo) forwards;
+}
+.hl1{animation-delay:1.9s;}
+.hl2{animation-delay:2.05s;}
+.hl3{
+  font-family:var(--serif);
+  font-style:italic;font-weight:300;
+  font-size:.65em;
+  color:var(--orange);
+  animation-delay:2.15s;
+}
+@keyframes slideUp{to{transform:translateY(0);}}
+.hero-sub{
+  margin-top:28px;
+  font-size:14px;color:var(--muted);
+  max-width:380px;line-height:1.85;
+  opacity:0;animation:fadeUp .8s 2.4s var(--ease-expo) forwards;
+}
+.hero-actions{
+  display:flex;align-items:center;gap:28px;
+  margin-top:40px;
+  opacity:0;animation:fadeUp .8s 2.6s var(--ease-expo) forwards;
+}
+.btn-main{
+  display:inline-flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,var(--orange),var(--hot-pink));
+  color:var(--white);text-decoration:none;
+  font-family:var(--display);font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;
+  padding:17px 40px;border-radius:2px;
+  transition:transform .3s,box-shadow .3s;
+  box-shadow:0 8px 40px rgba(255,107,26,.3);
+}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 14px 50px rgba(255,107,26,.45);}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:10px;
+  color:var(--muted);font-size:12px;letter-spacing:.1em;
+  text-decoration:none;transition:color .3s;cursor:none;
+}
+.btn-ghost:hover{color:var(--white);}
+.btn-ghost::after{content:'→';transition:transform .3s;}
+.btn-ghost:hover::after{transform:translateX(5px);}
+
+/* Hero scroll hint */
+.hero-scroll{
+  position:absolute;bottom:44px;right:56px;z-index:3;
+  display:flex;align-items:center;gap:12px;
+  opacity:0;animation:fadeIn .8s 3s forwards;
+}
+.hero-scroll-track{
+  width:1px;height:56px;background:rgba(253,248,240,.15);
+  overflow:hidden;position:relative;
+}
+.hero-scroll-track::after{
+  content:'';position:absolute;top:-56px;left:0;right:0;
+  height:56px;background:var(--orange);
+  animation:scrollDown 2s ease-in-out infinite;
+}
+@keyframes scrollDown{0%{top:-56px;}100%{top:100%;}}
+.hero-scroll-txt{
+  writing-mode:vertical-rl;
+  font-size:9px;letter-spacing:.28em;text-transform:uppercase;
+  color:rgba(253,248,240,.3);
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* ── MARQUEE ── */
+.marquee-wrap{
+  overflow:hidden;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:20px 0;background:var(--deep);
+  position:relative;z-index:2;
+}
+.marquee-inner{
+  display:inline-flex;gap:0;white-space:nowrap;
+  animation:marquee 18s linear infinite;
+}
+.marquee-item{
+  display:inline-flex;align-items:center;gap:0;
+  font-family:var(--display);
+  font-size:12px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;
+  padding:0 36px;color:var(--muted);
+}
+.marquee-dot{
+  width:5px;height:5px;border-radius:50%;
+  display:inline-block;margin-right:36px;flex-shrink:0;
+}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ── SECTION COMMON ── */
+.sec{padding:140px 56px;position:relative;}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:10px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--orange);margin-bottom:20px;
+}
+.eyebrow::before{content:'';width:22px;height:1.5px;background:var(--orange);}
+.heading{
+  font-family:var(--display);
+  font-size:clamp(40px,6vw,80px);
+  font-weight:900;
+  line-height:.95;
+  letter-spacing:-.03em;
+}
+.heading em{
+  font-family:var(--serif);
+  font-style:italic;font-weight:300;
+  color:var(--orange);font-size:1.1em;
+}
+
+/* ── COLLECTION GRID ── */
+#collection{background:var(--black);}
+.col-header{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:72px;
+}
+.col-note{font-size:13px;color:var(--muted);max-width:260px;line-height:1.8;text-align:right;}
+
+.col-grid{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  grid-template-rows:480px 380px;
+  gap:12px;
+}
+.col-item{
+  position:relative;overflow:hidden;border-radius:4px;
+  cursor:none;
+}
+.ci-1{grid-column:span 5;grid-row:span 2;}
+.ci-2{grid-column:span 4;}
+.ci-3{grid-column:span 3;}
+.ci-4{grid-column:span 3;}
+.ci-5{grid-column:span 4;}
+.ci-6{grid-column:span 5;}
+
+.col-img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center top;
+  transition:transform .9s var(--ease-expo),filter .6s;
+  filter:saturate(1.05);
+}
+.col-item:hover .col-img{transform:scale(1.07);filter:saturate(1.2);}
+
+/* Hover overlay */
+.col-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(8,6,8,.85) 0%,rgba(8,6,8,.1) 50%,transparent 100%);
+  transition:background .5s;
+}
+.col-item:hover .col-overlay{
+  background:linear-gradient(to top,rgba(255,107,26,.5) 0%,rgba(8,6,8,.15) 40%,transparent 100%);
+}
+
+.col-info{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:28px;z-index:2;
+  transform:translateY(8px);
+  transition:transform .5s var(--ease-expo);
+}
+.col-item:hover .col-info{transform:translateY(0);}
+.col-cat{
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--orange);margin-bottom:6px;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .4s .1s,transform .4s .1s var(--ease-expo);
+}
+.col-item:hover .col-cat{opacity:1;transform:translateY(0);}
+.col-name{
+  font-family:var(--display);font-size:18px;font-weight:700;
+  color:var(--white);letter-spacing:-.01em;
+}
+.col-price{
+  font-family:var(--serif);font-size:16px;font-style:italic;
+  color:var(--yellow);margin-top:6px;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s .15s,transform .4s .15s var(--ease-expo);
+}
+.col-item:hover .col-price{opacity:1;transform:translateY(0);}
+
+/* Color accent tags on hover */
+.col-tag{
+  position:absolute;top:16px;left:16px;z-index:3;
+  font-family:var(--display);font-size:9px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:5px 12px;border-radius:100px;
+  transform:scale(0.8) translateY(-4px);
+  opacity:0;
+  transition:opacity .3s,transform .3s var(--ease-expo);
+}
+.col-item:hover .col-tag{opacity:1;transform:scale(1) translateY(0);}
+.tag-new{background:var(--yellow);color:var(--black);}
+.tag-hot{background:var(--hot-pink);color:var(--white);}
+.tag-ltd{background:var(--orange);color:var(--white);}
+
+/* ── MODELS FEATURE ── */
+#models{
+  background:var(--deep);
+  padding:140px 56px;
+}
+.models-header{margin-bottom:80px;}
+.models-row{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+}
+.model-card{
+  position:relative;
+  aspect-ratio:3/4;
+  border-radius:4px;
+  overflow:hidden;
+  cursor:none;
+  transition:transform .5s var(--ease-expo);
+}
+.model-card:hover{transform:scale(1.02) translateY(-6px);}
+.model-card:nth-child(2){margin-top:48px;}
+.model-card:nth-child(4){margin-top:24px;}
+
+.model-img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center top;
+  transition:transform .8s var(--ease-expo),filter .5s;
+}
+.model-card:hover .model-img{
+  transform:scale(1.06);
+  filter:contrast(1.1) saturate(1.15);
+}
+
+/* Clip reveal overlay */
+.model-reveal{
+  position:absolute;inset:0;
+  background:var(--deep);
+  transform-origin:bottom;
+  transition:transform .9s var(--ease-expo);
+  z-index:2;
+}
+.model-card.revealed .model-reveal{transform:scaleY(0);}
+
+/* Color grade overlay per card */
+.model-card:nth-child(1) .model-img-wrap::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(255,107,26,.1),transparent 60%);mix-blend-mode:screen;
+}
+.model-card:nth-child(2) .model-img-wrap::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(255,26,107,.1),transparent 60%);mix-blend-mode:screen;
+}
+.model-card:nth-child(3) .model-img-wrap::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(255,214,10,.08),transparent 60%);mix-blend-mode:screen;
+}
+.model-card:nth-child(4) .model-img-wrap::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(201,243,29,.08),transparent 60%);mix-blend-mode:screen;
+}
+.model-img-wrap{position:absolute;inset:0;}
+
+.model-info{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:28px 24px;z-index:3;
+  background:linear-gradient(to top,rgba(8,6,8,.8) 0%,transparent 100%);
+  transform:translateY(100%);
+  transition:transform .6s var(--ease-expo);
+}
+.model-card:hover .model-info{transform:translateY(0);}
+.model-name{
+  font-family:var(--display);font-size:15px;font-weight:700;
+  color:var(--white);margin-bottom:4px;letter-spacing:-.01em;
+}
+.model-role{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--orange);}
+/* Accent line */
+.model-card::before{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;
+  height:3px;z-index:4;
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .5s var(--ease-expo);
+}
+.model-card:nth-child(1)::before{background:var(--orange);}
+.model-card:nth-child(2)::before{background:var(--hot-pink);}
+.model-card:nth-child(3)::before{background:var(--yellow);}
+.model-card:nth-child(4)::before{background:var(--lime);}
+.model-card:hover::before{transform:scaleX(1);}
+
+/* ── PROMO BAND ── */
+#promo{
+  background:linear-gradient(135deg,var(--orange) 0%,var(--hot-pink) 50%,#c4006a 100%);
+  padding:100px 56px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:40px;overflow:hidden;position:relative;
+}
+#promo::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 70% 50%,rgba(255,255,255,.1) 0%,transparent 60%);
+}
+.promo-big{
+  font-family:var(--display);
+  font-size:clamp(60px,12vw,160px);
+  font-weight:900;letter-spacing:-.04em;
+  line-height:.85;color:rgba(0,0,0,.12);
+  position:absolute;right:-20px;top:50%;
+  transform:translateY(-50%);
+  user-select:none;pointer-events:none;
+}
+.promo-left{position:relative;z-index:1;}
+.promo-eyebrow{
+  font-size:10px;letter-spacing:.28em;text-transform:uppercase;
+  color:rgba(0,0,0,.5);margin-bottom:16px;
+}
+.promo-title{
+  font-family:var(--display);
+  font-size:clamp(36px,5vw,64px);
+  font-weight:900;letter-spacing:-.03em;
+  line-height:.95;color:var(--black);
+}
+.promo-sub{
+  margin-top:16px;font-size:14px;
+  color:rgba(0,0,0,.55);line-height:1.7;max-width:380px;
+}
+.btn-dark{
+  display:inline-block;
+  background:var(--black);color:var(--white);
+  font-family:var(--display);font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;
+  padding:17px 44px;border-radius:2px;text-decoration:none;
+  transition:background .3s,transform .2s;
+  margin-top:36px;cursor:none;position:relative;z-index:1;
+}
+.btn-dark:hover{background:#2a1a1a;transform:translateY(-2px);}
+
+/* ── TESTIMONIALS ── */
+#testimonials{
+  background:var(--surface);
+  padding:140px 56px;
+}
+.test-layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;
+}
+.test-visual{position:relative;height:600px;}
+.test-img-main{
+  position:absolute;top:0;left:0;right:56px;bottom:56px;
+  border-radius:4px;overflow:hidden;
+}
+.test-img-main img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center top;
+  filter:contrast(1.05);
+}
+.test-img-accent{
+  position:absolute;bottom:0;right:0;
+  width:220px;height:200px;
+  background:linear-gradient(135deg,var(--orange),var(--hot-pink));
+  border-radius:4px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;overflow:hidden;
+}
+.test-img-accent::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 30%,rgba(255,255,255,.15),transparent 60%);
+}
+.accent-num{
+  font-family:var(--display);font-size:56px;font-weight:900;
+  color:var(--black);line-height:1;position:relative;
+}
+.accent-label{
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(0,0,0,.55);position:relative;
+}
+
+.test-content{}
+.test-quote-mark{
+  font-family:var(--serif);font-size:180px;
+  color:rgba(255,107,26,.08);line-height:.6;
+  font-weight:700;margin-bottom:0;
+  user-select:none;
+}
+.test-quote{
+  font-family:var(--serif);
+  font-size:clamp(20px,2.5vw,28px);
+  font-style:italic;font-weight:300;
+  line-height:1.65;color:var(--white);
+  margin-bottom:40px;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .7s,transform .7s var(--ease-expo);
+}
+.test-quote.show{opacity:1;transform:translateY(0);}
+.test-author{display:flex;align-items:center;gap:16px;}
+.test-avatar{
+  width:52px;height:52px;border-radius:50%;overflow:hidden;flex-shrink:0;
+  border:2px solid var(--orange);
+}
+.test-avatar img{width:100%;height:100%;object-fit:cover;}
+.test-name{font-size:14px;font-weight:500;color:var(--white);display:block;}
+.test-role{font-size:11px;color:rgba(253,248,240,.4);letter-spacing:.08em;display:block;margin-top:2px;}
+.test-stars{display:flex;gap:3px;margin-top:6px;}
+.star{
+  width:13px;height:13px;background:var(--orange);
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+}
+.test-dots{display:flex;gap:8px;margin-top:40px;}
+.tdot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(253,248,240,.2);
+  border:none;cursor:none;transition:all .3s;
+}
+.tdot.active{background:var(--orange);width:22px;border-radius:3px;}
+
+/* ── LOOKBOOK ── */
+#lookbook{background:var(--black);}
+.look-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:2px;
+}
+.look-item{
+  position:relative;height:560px;overflow:hidden;cursor:none;
+}
+.look-img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  transition:transform .8s var(--ease-expo),filter .5s;
+  filter:grayscale(.2);
+}
+.look-item:hover .look-img{
+  transform:scale(1.04);filter:grayscale(0) saturate(1.2);
+}
+.look-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(8,6,8,.8) 0%,rgba(8,6,8,.1) 60%,transparent 100%);
+  transition:background .5s;
+}
+.look-item:hover .look-overlay{
+  background:linear-gradient(to top,rgba(255,107,26,.45) 0%,rgba(8,6,8,.1) 50%,transparent 100%);
+}
+.look-content{
+  position:absolute;bottom:0;left:0;right:0;padding:40px;z-index:2;
+}
+.look-num{
+  font-family:var(--display);
+  font-size:56px;font-weight:900;
+  color:rgba(253,248,240,.06);
+  line-height:1;margin-bottom:12px;
+}
+.look-title{
+  font-family:var(--display);font-size:22px;font-weight:700;
+  color:var(--white);letter-spacing:-.01em;margin-bottom:6px;
+}
+.look-sub{font-size:12px;color:var(--muted);letter-spacing:.08em;}
+.look-reveal-line{
+  position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--orange),var(--hot-pink));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .6s var(--ease-expo);z-index:3;
+}
+.look-item:hover .look-reveal-line{transform:scaleX(1);}
+
+/* ── CONTACT / RESERVE ── */
+#contact{
+  background:var(--deep);
+  padding:140px 56px;
+}
+.contact-layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:100px;align-items:start;
+}
+.contact-left{}
+.contact-title{
+  font-family:var(--display);
+  font-size:clamp(52px,8vw,100px);
+  font-weight:900;
+  line-height:.9;letter-spacing:-.03em;
+  margin-bottom:36px;
+}
+.contact-title em{
+  font-family:var(--serif);font-style:italic;font-weight:300;
+  color:var(--orange);font-size:1.1em;
+}
+.contact-links{display:flex;flex-direction:column;gap:14px;}
+.cl{
+  display:flex;align-items:center;gap:16px;
+  padding:18px 22px;
+  background:rgba(253,248,240,.03);
+  border:1px solid var(--border);
+  border-radius:6px;text-decoration:none;color:var(--white);
+  transition:border-color .3s,background .3s,transform .3s;cursor:none;
+}
+.cl:hover{border-color:rgba(255,107,26,.3);background:rgba(255,107,26,.05);transform:translateX(6px);}
+.cl-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.cl-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange);display:block;margin-bottom:3px;}
+.cl-value{font-size:14px;}
+.cl-arrow{margin-left:auto;color:var(--muted);font-size:16px;}
+
+.contact-form{display:flex;flex-direction:column;gap:16px;}
+.fg{display:flex;flex-direction:column;gap:7px;}
+.fg label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(253,248,240,.3);}
+.fg input,.fg select,.fg textarea{
+  background:rgba(253,248,240,.04);
+  border:1px solid var(--border);
+  color:var(--white);font-family:var(--sans);font-size:14px;
+  padding:14px 18px;border-radius:6px;outline:none;
+  transition:border-color .3s,background .3s;
+}
+.fg input::placeholder,.fg textarea::placeholder{color:rgba(253,248,240,.2);}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--orange);background:rgba(255,107,26,.05);}
+.fg select option{background:var(--deep);}
+.fg textarea{min-height:100px;resize:vertical;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-btn{
+  background:linear-gradient(135deg,var(--orange),var(--hot-pink));
+  color:var(--white);border:none;
+  font-family:var(--display);font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;
+  padding:18px 48px;border-radius:2px;cursor:none;
+  align-self:flex-start;
+  box-shadow:0 8px 36px rgba(255,107,26,.3);
+  transition:opacity .3s,transform .2s;
+}
+.form-btn:hover{opacity:.85;transform:translateY(-2px);}
+
+/* ── FOOTER ── */
+footer{
+  background:#050305;
+  border-top:1px solid var(--border);
+  padding:80px 56px 40px;
+}
+.footer-top{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:60px;margin-bottom:60px;
+}
+.footer-logo-big{
+  font-family:var(--display);font-size:30px;font-weight:900;
+  letter-spacing:.3em;text-decoration:none;color:var(--white);
+  display:block;margin-bottom:16px;
+}
+.footer-desc{font-size:13px;color:rgba(253,248,240,.3);line-height:1.8;max-width:230px;}
+.footer-socials{display:flex;gap:10px;margin-top:22px;}
+.footer-socials a{
+  width:38px;height:38px;border:1px solid var(--border);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:var(--muted);text-decoration:none;
+  transition:all .3s;
+}
+.footer-socials a:hover{border-color:var(--orange);color:var(--orange);}
+.fc h4{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(253,248,240,.2);margin-bottom:18px;}
+.fc ul{list-style:none;display:flex;flex-direction:column;gap:11px;}
+.fc ul a{font-size:13px;color:rgba(253,248,240,.4);text-decoration:none;transition:color .3s;}
+.fc ul a:hover{color:var(--orange);}
+.footer-bottom{
+  border-top:1px solid var(--border);padding-top:26px;
+  display:flex;justify-content:space-between;
+  font-size:12px;color:rgba(253,248,240,.15);flex-wrap:wrap;gap:10px;
+}
+.footer-bottom a{color:var(--orange);text-decoration:none;}
+
+/* ── REVEAL SYSTEM ── */
+.rv{opacity:0;transform:translateY(44px);transition:opacity .9s var(--ease-expo),transform .9s var(--ease-expo);}
+.rv.in{opacity:1;transform:translateY(0);}
+.rvl{opacity:0;transform:translateX(-44px);transition:opacity .9s var(--ease-expo),transform .9s var(--ease-expo);}
+.rvl.in{opacity:1;transform:translateX(0);}
+.rvr{opacity:0;transform:translateX(44px);transition:opacity .9s var(--ease-expo),transform .9s var(--ease-expo);}
+.rvr.in{opacity:1;transform:translateX(0);}
+[data-d="1"]{transition-delay:.1s;}
+[data-d="2"]{transition-delay:.2s;}
+[data-d="3"]{transition-delay:.3s;}
+[data-d="4"]{transition-delay:.4s;}
+[data-d="5"]{transition-delay:.5s;}
+[data-d="6"]{transition-delay:.6s;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  nav{padding:20px 24px;}
+  .nav-links{display:none;}
+  .sec,#models,#promo,#testimonials,#lookbook,#contact,footer{padding:80px 24px;}
+  #hero .hero-content{padding:0 24px 72px;}
+  .hero-models{opacity:.4;}
+  .col-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;}
+  .ci-1,.ci-2,.ci-3,.ci-4,.ci-5,.ci-6{grid-column:span 1;height:280px;}
+  .models-row{grid-template-columns:1fr 1fr;}
+  .model-card:nth-child(2),.model-card:nth-child(4){margin-top:0;}
+  .test-layout,.contact-layout{grid-template-columns:1fr;gap:50px;}
+  .test-visual{height:360px;}
+  .look-grid{grid-template-columns:1fr;}
+  .look-item{height:400px;}
+  .footer-top{grid-template-columns:1fr 1fr;gap:40px;}
+  .form-row{grid-template-columns:1fr;}
+  #promo{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur">
+  <div class="cur-ring"></div>
+  <div class="cur-dot"></div>
+  <div class="cur-label">VIEW</div>
+</div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-logo">
+    <span>N</span><span>Ō</span><span>I</span><span>R</span>
+  </div>
+  <div class="ld-bar"><div class="ld-fill" id="ldFill"></div></div>
+  <div class="ld-pct" id="ldPct">0%</div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">N<span class="macron">Ō</span>IR</a>
+  <ul class="nav-links">
+    <li><a href="#collection">Collection</a></li>
+    <li><a href="#models">Models</a></li>
+    <li><a href="#lookbook">Lookbook</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta">SS 2025 Drop</button>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <!-- Real model photos from Unsplash -->
+  <div class="hero-models">
+    <div class="hm-col" id="hmc1">
+      <img class="hm-img" src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&q=80&fit=crop&crop=top" alt="Fashion model" crossorigin="anonymous"/>
+    </div>
+    <div class="hm-col" id="hmc2">
+      <img class="hm-img" src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80&fit=crop&crop=top" alt="Fashion model" crossorigin="anonymous"/>
+    </div>
+    <div class="hm-col" id="hmc3">
+      <img class="hm-img" src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=80&fit=crop&crop=top" alt="Fashion model" crossorigin="anonymous"/>
+    </div>
+  </div>
+  <div class="hero-bottom-fade"></div>
+  <div class="hero-content">
+    <div class="hero-season">Spring / Summer 2025 Collection</div>
+    <h1 class="hero-title">
+      <span class="hero-title-line"><span class="hero-title-word hl1">NŌIR</span></span>
+      <span class="hero-title-line"><span class="hero-title-word hl2">Lagos</span></span>
+      <span class="hero-title-line"><span class="hero-title-word hl3">Haute Couture</span></span>
+    </h1>
+    <p class="hero-sub">Where African identity meets global luxury. Unapologetically bold. Relentlessly beautiful.</p>
+    <div class="hero-actions">
+      <a href="#collection" class="btn-main">Explore Collection</a>
+      <a href="#lookbook" class="btn-ghost">View Lookbook</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-track"></div>
+    <span class="hero-scroll-txt">Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-inner" id="mq"></div>
+</div>
+
+<!-- ══ COLLECTION ══ -->
+<section id="collection" class="sec">
+  <div class="col-header rv">
+    <div>
+      <p class="eyebrow">SS 2025</p>
+      <h2 class="heading">The <em>Drop</em></h2>
+    </div>
+    <p class="col-note">Limited pieces. Unlimited impact. Each garment hand-finished in Lagos.</p>
+  </div>
+  <div class="col-grid">
+    <div class="col-item ci-1 rv" data-d="1">
+      <img class="col-img" src="https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=700&q=80&fit=crop&crop=top" alt="Collection piece" crossorigin="anonymous"/>
+      <div class="col-overlay"></div>
+      <span class="col-tag tag-new">New</span>
+      <div class="col-info">
+        <p class="col-cat">Haute Couture</p>
+        <h3 class="col-name">Lagos Noir Gown</h3>
+        <p class="col-price">₦480,000</p>
+      </div>
+    </div>
+    <div class="col-item ci-2 rv" data-d="2">
+      <img class="col-img" src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=80&fit=crop&crop=top" alt="Collection piece" crossorigin="anonymous"/>
+      <div class="col-overlay"></div>
+      <span class="col-tag tag-hot">Hot</span>
+      <div class="col-info">
+        <p class="col-cat">Ready to Wear</p>
+        <h3 class="col-name">Scarlet Power Suit</h3>
+        <p class="col-price">₦265,000</p>
+      </div>
+    </div>
+    <div class="col-item ci-3 rv" data-d="3">
+      <img class="col-img" src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=500&q=80&fit=crop&crop=top" alt="Collection piece" crossorigin="anonymous"/>
+      <div class="col-overlay"></div>
+      <span class="col-tag tag-ltd">Limited</span>
+      <div class="col-info">
+        <p class="col-cat">Accessories</p>
+        <h3 class="col-name">Gold Drip Set</h3>
+        <p class="col-price">₦125,000</p>
+      </div>
+    </div>
+    <div class="col-item ci-4 rv" data-d="2">
+      <img class="col-img" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500&q=80&fit=crop&crop=top" alt="Collection piece" crossorigin="anonymous"/>
+      <div class="col-overlay"></div>
+      <div class="col-info">
+        <p class="col-cat">Evening Wear</p>
+        <h3 class="col-name">Midnight Drape</h3>
+        <p class="col-price">₦340,000</p>
+      </div>
+    </div>
+    <div class="col-item ci-5 rv" data-d="3">
+      <img class="col-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&q=80&fit=crop&crop=top" alt="Collection piece" crossorigin="anonymous"/>
+      <div class="col-overlay"></div>
+      <span class="col-tag tag-new">New</span>
+      <div class="col-info">
+        <p class="col-cat">Couture</p>
+        <h3 class="col-name">Eko Flame Dress</h3>
+        <p class="col-price">₦520,000</p>
+      </div>
+    </div>
+    <div class="col-item ci-6 rv" data-d="4">
+      <img class="col-img" src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=80&fit=crop&crop=top" alt="Collection piece" crossorigin="anonymous"/>
+      <div class="col-overlay"></div>
+      <div class="col-info">
+        <p class="col-cat">Street Luxe</p>
+        <h3 class="col-name">Lagos Monochrome</h3>
+        <p class="col-price">₦195,000</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MODELS ══ -->
+<section id="models">
+  <div class="models-header rv">
+    <p class="eyebrow">The Faces</p>
+    <h2 class="heading">Meet Our <em>Muses</em></h2>
+  </div>
+  <div class="models-row">
+    <div class="model-card">
+      <div class="model-reveal"></div>
+      <div class="model-img-wrap">
+        <img class="model-img" src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=500&q=85&fit=crop&crop=top" alt="Model Amara" crossorigin="anonymous"/>
+      </div>
+      <div class="model-info">
+        <div class="model-name">Amara Osei</div>
+        <div class="model-role">Lead Campaign Model</div>
+      </div>
+    </div>
+    <div class="model-card">
+      <div class="model-reveal"></div>
+      <div class="model-img-wrap">
+        <img class="model-img" src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=500&q=85&fit=crop&crop=top" alt="Model Zara" crossorigin="anonymous"/>
+      </div>
+      <div class="model-info">
+        <div class="model-name">Zara Mensah</div>
+        <div class="model-role">Haute Couture Muse</div>
+      </div>
+    </div>
+    <div class="model-card">
+      <div class="model-reveal"></div>
+      <div class="model-img-wrap">
+        <img class="model-img" src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&q=85&fit=crop&crop=top" alt="Model Kemi" crossorigin="anonymous"/>
+      </div>
+      <div class="model-info">
+        <div class="model-name">Kemi Adeyemi</div>
+        <div class="model-role">SS25 Face</div>
+      </div>
+    </div>
+    <div class="model-card">
+      <div class="model-reveal"></div>
+      <div class="model-img-wrap">
+        <img class="model-img" src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=500&q=85&fit=crop&crop=top" alt="Model Nadia" crossorigin="anonymous"/>
+      </div>
+      <div class="model-info">
+        <div class="model-name">Nadia Okafor</div>
+        <div class="model-role">Street Luxe Muse</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROMO BAND ══ -->
+<div id="promo">
+  <div class="promo-big">SS25</div>
+  <div class="promo-left rv">
+    <p class="promo-eyebrow">Limited Drop · 48 Hours Only</p>
+    <h2 class="promo-title">Up to 30% Off<br>Selected Pieces</h2>
+    <p class="promo-sub">Our most coveted pieces at a once-a-season price. Don't wait — each piece is numbered and never restocked.</p>
+    <a href="#collection" class="btn-dark">Shop the Drop</a>
+  </div>
+</div>
+
+<!-- ══ TESTIMONIALS ══ -->
+<section id="testimonials">
+  <div class="test-layout">
+    <div class="test-visual rvl">
+      <div class="test-img-main">
+        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&q=85&fit=crop&crop=top" alt="Featured model" crossorigin="anonymous"/>
+      </div>
+      <div class="test-img-accent">
+        <span class="accent-num">500+</span>
+        <span class="accent-label">Happy Clients</span>
+      </div>
+    </div>
+    <div class="rvr">
+      <p class="eyebrow">What They Say</p>
+      <div class="test-quote-mark">"</div>
+      <p class="test-quote show" id="tq"></p>
+      <div class="test-author">
+        <div class="test-avatar">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80&fit=crop&crop=face" alt="Reviewer" crossorigin="anonymous" id="tAvatar"/>
+        </div>
+        <div>
+          <span class="test-name" id="tName"></span>
+          <span class="test-role" id="tRole"></span>
+          <div class="test-stars">
+            <div class="star"></div><div class="star"></div><div class="star"></div>
+            <div class="star"></div><div class="star"></div>
+          </div>
+        </div>
+      </div>
+      <div class="test-dots" id="tdots"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LOOKBOOK ══ -->
+<section id="lookbook" class="sec">
+  <div class="col-header rv" style="margin-bottom:48px;">
+    <div>
+      <p class="eyebrow">SS 2025 Lookbook</p>
+      <h2 class="heading">The <em>Edit</em></h2>
+    </div>
+  </div>
+  <div class="look-grid">
+    <div class="look-item rv" data-d="1">
+      <img class="look-img" src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=900&q=80&fit=crop" alt="Lookbook" crossorigin="anonymous"/>
+      <div class="look-overlay"></div>
+      <div class="look-content">
+        <div class="look-num">01</div>
+        <h3 class="look-title">Night & Fire</h3>
+        <p class="look-sub">Evening collection · 12 pieces</p>
+      </div>
+      <div class="look-reveal-line"></div>
+    </div>
+    <div class="look-item rv" data-d="2">
+      <img class="look-img" src="https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=900&q=80&fit=crop" alt="Lookbook" crossorigin="anonymous"/>
+      <div class="look-overlay"></div>
+      <div class="look-content">
+        <div class="look-num">02</div>
+        <h3 class="look-title">Power & Grace</h3>
+        <p class="look-sub">Daywear collection · 18 pieces</p>
+      </div>
+      <div class="look-reveal-line"></div>
+    </div>
+    <div class="look-item rv" data-d="3">
+      <img class="look-img" src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=900&q=80&fit=crop" alt="Lookbook" crossorigin="anonymous"/>
+      <div class="look-overlay"></div>
+      <div class="look-content">
+        <div class="look-num">03</div>
+        <h3 class="look-title">Street Luxe</h3>
+        <p class="look-sub">Urban collection · 9 pieces</p>
+      </div>
+      <div class="look-reveal-line"></div>
+    </div>
+    <div class="look-item rv" data-d="4">
+      <img class="look-img" src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=900&q=80&fit=crop" alt="Lookbook" crossorigin="anonymous"/>
+      <div class="look-overlay"></div>
+      <div class="look-content">
+        <div class="look-num">04</div>
+        <h3 class="look-title">Monochrome Lagos</h3>
+        <p class="look-sub">Capsule collection · 6 pieces</p>
+      </div>
+      <div class="look-reveal-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="contact-layout">
+    <div class="rvl">
+      <p class="eyebrow">Get in Touch</p>
+      <h2 class="contact-title">Let's<br>talk <em>fashion</em></h2>
+      <div class="contact-links">
+        <a href="https://wa.me/2348012345678" class="cl" target="_blank">
+          <div class="cl-icon" style="background:rgba(255,107,26,.1);">💬</div>
+          <div>
+            <span class="cl-label">WhatsApp</span>
+            <span class="cl-value">+234 801 234 5678</span>
+          </div>
+          <span class="cl-arrow">↗</span>
+        </a>
+        <a href="mailto:hello@noir.ng" class="cl">
+          <div class="cl-icon" style="background:rgba(255,26,107,.1);">✉️</div>
+          <div>
+            <span class="cl-label">Email</span>
+            <span class="cl-value">hello@noir.ng</span>
+          </div>
+          <span class="cl-arrow">↗</span>
+        </a>
+        <div class="cl">
+          <div class="cl-icon" style="background:rgba(255,214,10,.1);">📍</div>
+          <div>
+            <span class="cl-label">Showroom</span>
+            <span class="cl-value">Victoria Island, Lagos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <form class="contact-form rvr" onsubmit="handleForm(event)">
+      <div class="form-row">
+        <div class="fg"><label>First Name</label><input type="text" placeholder="Amara" required/></div>
+        <div class="fg"><label>Last Name</label><input type="text" placeholder="Osei" required/></div>
+      </div>
+      <div class="fg"><label>Email</label><input type="email" placeholder="amara@example.com" required/></div>
+      <div class="fg">
+        <label>Enquiry</label>
+        <select>
+          <option>Custom Order</option>
+          <option>Wholesale / Retail</option>
+          <option>Press / Editorial</option>
+          <option>Event Styling</option>
+          <option>General Enquiry</option>
+        </select>
+      </div>
+      <div class="fg"><label>Message</label><textarea placeholder="Tell us about your vision..."></textarea></div>
+      <button type="submit" class="form-btn">Send Message →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <a href="#hero" class="footer-logo-big">NŌIR</a>
+      <p class="footer-desc">Lagos luxury fashion house. Bold African identity, global luxury standards.</p>
+      <div class="footer-socials">
+        <a href="#">ig</a><a href="#">tw</a><a href="#">tk</a><a href="#">fb</a>
+      </div>
+    </div>
+    <div class="fc"><h4>Shop</h4><ul><li><a href="#">New Arrivals</a></li><li><a href="#">Collection</a></li><li><a href="#">Lookbook</a></li><li><a href="#">Sale</a></li></ul></div>
+    <div class="fc"><h4>Brand</h4><ul><li><a href="#">Our Story</a></li><li><a href="#">Models</a></li><li><a href="#">Press</a></li><li><a href="#">Careers</a></li></ul></div>
+    <div class="fc"><h4>Help</h4><ul><li><a href="#">Sizing Guide</a></li><li><a href="#">Shipping</a></li><li><a href="#">Returns</a></li><li><a href="#">Contact</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 NŌIR Lagos. All rights reserved.</span>
+    <span>Built by <a href="#">Adenika Caleb</a></span>
+  </div>
+</footer>
+
+<script>
+// ══ LOADER ══
+const ldFill = document.getElementById('ldFill');
+const ldPct  = document.getElementById('ldPct');
+const loader = document.getElementById('loader');
+let prog=0;
+const iv=setInterval(()=>{
+  prog += Math.random()*14;
+  if(prog>=100){prog=100;clearInterval(iv);
+    setTimeout(()=>loader.classList.add('out'),400);
+  }
+  ldFill.style.width=prog+'%';
+  ldPct.textContent=Math.floor(prog)+'%';
+},100);
+
+// ══ CURSOR ══
+const cur=document.getElementById('cur');
+let cx=0,cy=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  cx=e.clientX;cy=e.clientY;
+  cur.style.left=cx+'px';cur.style.top=cy+'px';
+});
+
+document.querySelectorAll('a,button,.step,.s4-tag,.s5-cell,.fc ul a').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));
+});
+document.querySelectorAll('.col-item,.model-card,.look-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    document.body.classList.add('hovering-img');
+    document.body.classList.remove('hovering');
+  });
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering-img'));
+});
+
+// ══ NAV SCROLL ══
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('solid',scrollY>80));
+
+// ══ MARQUEE ══
+const mqItems=[
+  {text:'NŌIR Lagos',color:null},{text:'Spring / Summer 2025',color:'var(--orange)'},
+  {text:'Haute Couture',color:null},{text:'Victoria Island',color:'var(--hot-pink)'},
+  {text:'Lagos Fashion Week',color:null},{text:'Limited Edition',color:'var(--yellow)'},
+  {text:'African Luxury',color:null},{text:'New Collection',color:'var(--coral)'},
+];
+const mq=document.getElementById('mq');
+const mqHtml=([...mqItems,...mqItems,...mqItems,...mqItems]).map(item=>`
+  <span class="marquee-item">
+    <span class="marquee-dot" style="background:${item.color||'rgba(253,248,240,0.15)'}"></span>
+    ${item.text}
+  </span>`).join('');
+mq.innerHTML=mqHtml;
+
+// ══ HERO PARALLAX ══
+window.addEventListener('scroll',()=>{
+  const y=scrollY;
+  const cols=document.querySelectorAll('.hm-col');
+  if(cols[0]) cols[0].style.transform=`translateY(${-40 + y*.15}px)`;
+  if(cols[1]) cols[1].style.transform=`translateY(${y*.08}px)`;
+  if(cols[2]) cols[2].style.transform=`translateY(${-20 + y*.12}px)`;
+  const hc=document.querySelector('.hero-content');
+  if(hc) hc.style.transform=`translateY(${y*.22}px)`;
+});
+
+// ══ REVEAL ON SCROLL ══
+const ro=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const d=parseInt(e.target.dataset.d||0)*100;
+      setTimeout(()=>e.target.classList.add('in'),d);
+    }
+  });
+},{threshold:.12});
+document.querySelectorAll('.rv,.rvl,.rvr').forEach(el=>ro.observe(el));
+
+// ══ MODEL CARD CLIP REVEAL ══
+const mr=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      const idx=[...document.querySelectorAll('.model-card')].indexOf(e.target);
+      setTimeout(()=>e.target.classList.add('revealed'),idx*120);
+      mr.unobserve(e.target);
+    }
+  });
+},{threshold:.2});
+document.querySelectorAll('.model-card').forEach(el=>mr.observe(el));
+
+// ══ 3D TILT ══
+document.querySelectorAll('.col-item,.model-card,.look-item').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`perspective(700px) rotateY(${x*8}deg) rotateX(${-y*6}deg)`;
+    card.style.transition='transform 0.08s ease';
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='';
+    card.style.transition='transform .7s var(--ease-expo)';
+  });
+});
+
+// ══ MAGNETIC BUTTONS ══
+document.querySelectorAll('.btn-main,.form-btn,.nav-cta').forEach(btn=>{
+  btn.addEventListener('mousemove',e=>{
+    const r=btn.getBoundingClientRect();
+    const x=(e.clientX-r.left-r.width/2)*.28;
+    const y=(e.clientY-r.top-r.height/2)*.28;
+    btn.style.transform=`translate(${x}px,${y}px)`;
+    btn.style.transition='transform .08s ease';
+  });
+  btn.addEventListener('mouseleave',()=>{
+    btn.style.transform='';
+    btn.style.transition='transform .5s var(--ease-expo), opacity .3s, box-shadow .3s';
+  });
+});
+
+// ══ TESTIMONIALS ══
+const tests=[
+  {q:"NŌIR doesn't just dress you — it transforms you. I wore the Lagos Noir Gown to the Arise Fashion Week and couldn't take a step without someone stopping me. Absolute masterpiece.",n:"Chidinma Eze",r:"Fashion Editor · Lagos",img:"https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80&fit=crop&crop=face"},
+  {q:"The craftsmanship is extraordinary. Every stitch tells a story. I've worn couture from Paris to Milan and NŌIR stands shoulder to shoulder with the best in the world.",n:"Bimpe Adeyemi",r:"Creative Director",img:"https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=100&q=80&fit=crop&crop=face"},
+  {q:"Finally — a Nigerian luxury brand that doesn't compromise. The Scarlet Power Suit changed the energy in every room I walked into. I ordered three colourways.",n:"Ngozi Fashola",r:"CEO, Fashola Group",img:"https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=100&q=80&fit=crop&crop=face"},
+  {q:"NŌIR is what happens when African identity refuses to be diluted for anyone. Bold, proud, and breathtakingly beautiful. This is the future of fashion.",n:"Tolu Okafor",r:"Vogue Africa Contributor",img:"https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=100&q=80&fit=crop&crop=face"},
+];
+let tidx=0;
+function setTest(i){
+  const t=tests[i];
+  const tq=document.getElementById('tq');
+  tq.classList.remove('show');
+  setTimeout(()=>{
+    tq.textContent='"'+t.q+'"';
+    document.getElementById('tName').textContent=t.n;
+    document.getElementById('tRole').textContent=t.r;
+    document.getElementById('tAvatar').src=t.img;
+    tq.classList.add('show');
+  },300);
+  document.querySelectorAll('.tdot').forEach((d,j)=>d.classList.toggle('active',j===i));
+}
+function buildDots(){
+  const td=document.getElementById('tdots');
+  td.innerHTML=tests.map((_,i)=>`<button class="tdot${i===0?' active':''}" onclick="gotoTest(${i})"></button>`).join('');
+}
+window.gotoTest=i=>{tidx=i;setTest(i);};
+buildDots();setTest(0);
+setInterval(()=>{tidx=(tidx+1)%tests.length;setTest(tidx);},5500);
+
+// ══ FORM ══
+function handleForm(e){
+  e.preventDefault();
+  const btn=e.target.querySelector('.form-btn');
+  btn.textContent='Sent ✓';
+  btn.style.background='#2d6a1f';
+  btn.style.boxShadow='0 8px 36px rgba(45,106,31,.3)';
+  setTimeout(()=>{
+    btn.textContent='Send Message →';
+    btn.style.background='';
+    btn.style.boxShadow='';
+    e.target.reset();
+  },3500);
+}
+</script>
+</body>
+</html>
